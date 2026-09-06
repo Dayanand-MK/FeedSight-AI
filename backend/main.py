@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from backend.app.api.assessment import router as assessment_router
 from backend.app.database.init_db import initialize_database
+from backend.app.api.sync import router as sync_router
 
 @asynccontextmanager
 async def lifespan(app : FastAPI):
@@ -16,6 +17,7 @@ app = FastAPI(
 )
 
 app.include_router(assessment_router)
+app.include_router(sync_router)
 
 @app.get("/")
 def root():

@@ -1,6 +1,6 @@
 from uuid import uuid4
 from fastapi import APIRouter
-from backend.app.database.assessment_repository import save_assessment
+from backend.app.database.assessment_repository import (get_all_assessments, save_assessment,)
 from backend.app.models.assessment import FeedAssessmentResponse
 from backend.app.models.feed_sample import FeedSample
 from backend.app.services.assessment_service import assess_feed
@@ -14,6 +14,10 @@ router = APIRouter(
     "/assess",
     response_model = FeedAssessmentResponse,
 )
+
+@router.get("/assessments")
+def list_assessments():
+    return get_all_assessments
 
 def assess_feed_sample(sample : FeedSample):
     sample_id = sample.sample_id or str(uuid4())
