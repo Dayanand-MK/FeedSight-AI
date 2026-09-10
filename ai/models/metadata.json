@@ -1,0 +1,23 @@
+{
+    "model_name": "gradient_boosting",
+    "target": "fqi",
+    "features": [
+        "pH",
+        "ammonia.s",
+        "lactic.ac.s",
+        "acetic.ac.s",
+        "propionic.ac.s",
+        "butyric.ac.s",
+        "ethanol.s",
+        "mannithol.s",
+        "dm.s",
+        "starch.s"
+    ],
+    "test_size": 0.2,
+    "random_state": 42,
+    "metrics": {
+        "MAE": 1.408004638936008,
+        "RMSE": 2.0489758264210365,
+        "R2": 0.9619286395365904
+    }
+}

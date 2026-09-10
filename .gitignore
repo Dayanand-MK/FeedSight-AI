@@ -19,6 +19,7 @@ env/
 *.h5
 *.pkl
 *.joblib
+!ai/models/feedsight_fqi_model.joblib
 
 # Node
 node_modules/

@@ -54,6 +54,15 @@ def preprocess():
 
     df = df[selected_columns].copy()
 
+    # Remove exact duplicate samples
+    duplicates_before = df.duplicated().sum()
+
+    print(f"\nDuplicate rows detected: {duplicates_before}")
+
+    df = df.drop_duplicates()
+
+    print(f"Rows after duplicate removal: {len(df)}")
+
     print(f"Selected dataset shape: {df.shape}")
 
     print("\nMissing values before cleaning:")

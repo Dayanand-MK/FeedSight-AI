@@ -1,0 +1,35 @@
+{
+    "model_name": "FeedSight FQI Gradient Boosting Regressor",
+    "model_version": "1.0.0",
+    "model_type": "GradientBoostingRegressor",
+    "target": "fqi",
+    "target_description": "Fermentative Quality Index",
+    "features": [
+        "pH",
+        "ammonia.s",
+        "lactic.ac.s",
+        "acetic.ac.s",
+        "propionic.ac.s",
+        "butyric.ac.s",
+        "ethanol.s",
+        "mannithol.s",
+        "dm.s",
+        "starch.s"
+    ],
+    "evaluation": {
+        "holdout_mae": 1.4080,
+        "holdout_rmse": 2.0490,
+        "holdout_r2": 0.9619,
+        "cv_folds": 5,
+        "cv_mae_mean": 1.2268,
+        "cv_rmse_mean": 1.7875,
+        "cv_r2_mean": 0.9717,
+        "cv_r2_std": 0.0058
+    },
+    "limitations": [
+        "Model estimates FQI from silage fermentation and composition measurements.",
+        "Model performance has been evaluated on the available maize silage dataset.",
+        "Model outputs should not be interpreted as biological causality.",
+        "Some model inputs are not directly measured by the current Wokwi sensor prototype."
+    ]
+}
