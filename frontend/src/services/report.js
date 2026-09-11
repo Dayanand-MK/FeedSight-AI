@@ -1,6 +1,10 @@
 import { animalContext, withGoal } from "./goals.js";
 import { assess } from "./assessment.js";
 import {
+  referenceComposition,
+  hasStorageProfile,
+} from "../config/feedComposition.js";
+import {
   nutritionProfiles,
   nutrientFields,
 } from "../config/nutritionProfiles.js";
@@ -41,6 +45,7 @@ function nutrition(input, sensor) {
       value,
       unit: config.unit,
       source: value == null ? "notAvailable" : "entered",
+      provenance: value == null ? "UNKNOWN" : "USER_REPORTED",
       target,
       reference,
       status:
@@ -58,14 +63,25 @@ function nutrition(input, sensor) {
     value: sensor.values.moisture,
     unit: "%",
     source: sensor.values.moisture == null ? "notAvailable" : sensor.source,
+    provenance:
+      sensor.values.moisture == null
+        ? "UNKNOWN"
+        : sensor.source === "device"
+          ? "SENSOR_MEASURED"
+          : sensor.source === "virtual"
+            ? "SIMULATED"
+            : "USER_REPORTED",
     status:
       sensor.values.moisture == null
         ? "notAvailable"
-        : sensor.values.moisture > (input.feedType === "maize_silage" ? 70 : 15)
-          ? "highValue"
-          : sensor.source === "virtual"
-            ? "simulated"
-            : "entered",
+        : !hasStorageProfile(input.feedType)
+          ? "insufficient"
+          : sensor.values.moisture >
+              (input.feedType === "maize_silage" ? 70 : 15)
+            ? "highValue"
+            : sensor.source === "virtual"
+              ? "simulated"
+              : "entered",
   };
   values.minerals = {
     value: null,
@@ -79,6 +95,7 @@ function nutrition(input, sensor) {
     scope: "ingredient-minimum-only",
     reference,
     completeRation: false,
+    composition: referenceComposition(input.feedType),
   };
 }
 export function buildReport(
@@ -103,12 +120,14 @@ function enrichReport(base, input, { fqi = null, batchId = null, timestamp }) {
   const storageFlags = base.reasons.filter((r) =>
     ["storage", "freshness"].includes(r.domain),
   );
-  const storageKnown = [
-    "temperature",
-    "humidity",
-    "moisture",
-    ...(input.feedType === "maize_silage" ? ["ph"] : []),
-  ].every((k) => base.sensor.values[k] != null);
+  const storageKnown =
+    hasStorageProfile(input.feedType) &&
+    [
+      "temperature",
+      "humidity",
+      "moisture",
+      ...(input.feedType === "maize_silage" ? ["ph"] : []),
+    ].every((k) => base.sensor.values[k] != null);
   const blocked = safetyConcern
     ? "safety"
     : storageFlags.length
@@ -185,6 +204,17 @@ function enrichReport(base, input, { fqi = null, batchId = null, timestamp }) {
   return {
     ...base,
     schemaVersion: 2,
+    feedIdentification: {
+      feedType: input.feedType,
+      rawModelLabel: null,
+      confidence: null,
+      source: "FARMER_SELECTED",
+      confirmed: input.feedTypeConfirmed === input.feedType,
+    },
+    pastureAnalysis:
+      input.pastureAnalysis?.task === "biomass_regression"
+        ? input.pastureAnalysis
+        : null,
     animalContext: animalContext(input),
     nirReference:
       typeof input.nirReference === "string"
@@ -197,6 +227,7 @@ function enrichReport(base, input, { fqi = null, batchId = null, timestamp }) {
           height: input.image.height,
           warning: input.image.warning || null,
           analysis: "unavailable",
+          dataUrl: input.image.dataUrl || null,
         }
       : null,
     timestamp,

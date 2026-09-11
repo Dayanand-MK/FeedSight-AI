@@ -1,6 +1,7 @@
 import { goalProfiles } from "../config/goalProfiles.js";
 import { useState } from "react";
 import { storageTrend } from "../services/report.js";
+import { HistoryChart } from "../components/AnalysisCharts.jsx";
 export default function StorageMonitor({ t, batches, tests, onRecord }) {
   const [id, setId] = useState(batches[0]?.id || "");
   const rows = tests.filter((r) => r.batchId === id),
@@ -69,6 +70,7 @@ export default function StorageMonitor({ t, batches, tests, onRecord }) {
               </p>
             )}
             <h2>{t("twin")}</h2>
+            <HistoryChart tests={rows} t={t} />
             <div className="table-wrap">
               <table>
                 <thead>

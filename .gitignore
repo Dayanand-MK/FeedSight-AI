@@ -48,6 +48,16 @@ frontend/test-results/
 frontend/playwright-report/
 .vercel/
 .pytest_cache/
+ai/datasets/image-downloads/
+ai/datasets/image-prepared/
+ai/evaluation/image-runs/
+ai/datasets/csiro-biomass/
+ai/processed/
+ai/results/biomass/
+*.onnx
+!frontend/public/models/biomass/*.onnx
+!frontend/public/models/biomass/*.json
+frontend/public/ort/
 
 # Local SQLite database
 database/*.db

@@ -1,6 +1,9 @@
 import { farmerStrings } from "./farmer.js";
 import { cloudStrings } from "./cloud.js";
 import { goalStrings } from "./goals.js";
+import { biomassStrings } from "./biomass.js";
+import { chartStrings } from "./charts.js";
+import { regionalStrings } from "./regional.js";
 const strings = {
   tagline: [
     "Know your feed. Care for your herd.",
@@ -382,10 +385,24 @@ const strings = {
 Object.assign(strings, farmerStrings);
 Object.assign(strings, cloudStrings);
 Object.assign(strings, goalStrings);
-export const languages = { en: "English", ta: "தமிழ்", hi: "हिन्दी" };
+Object.assign(strings, biomassStrings);
+Object.assign(strings, chartStrings);
+export const languages = {
+  en: "English",
+  ta: "தமிழ்",
+  hi: "हिन्दी",
+  kn: "ಕನ್ನಡ",
+  te: "తెలుగు",
+  mr: "मराठी",
+  bn: "বাংলা",
+  pa: "ਪੰਜਾਬੀ",
+};
 export function translate(lang, key) {
   return (
-    strings[key]?.[["en", "ta", "hi"].indexOf(lang)] || strings[key]?.[0] || key
+    regionalStrings[lang]?.[key] ||
+    strings[key]?.[["en", "ta", "hi"].indexOf(lang)] ||
+    strings[key]?.[0] ||
+    key
   );
 }
-export { strings };
+export { strings, regionalStrings };

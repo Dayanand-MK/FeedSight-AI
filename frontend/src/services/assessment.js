@@ -1,3 +1,4 @@
+import { feedTypes, hasStorageProfile } from "../config/feedComposition.js";
 // Prototype screening thresholds; not calibrated safety limits or an ML classifier.
 export const limits = {
   temperature: [-20, 80],
@@ -56,8 +57,7 @@ export function assess(input, { allowMissing = false } = {}) {
     ((!allowMissing || input.smell != null) && typeof input.smell !== "boolean")
   )
     throw new Error("invalidInput");
-  if (!["maize_silage", "dry_feed"].includes(input.feedType))
-    throw new Error("invalidInput");
+  if (!feedTypes.includes(input.feedType)) throw new Error("invalidInput");
   const sensor = sensorAdapter(
     input,
     input.source,
@@ -68,15 +68,19 @@ export function assess(input, { allowMissing = false } = {}) {
   const reasons = [];
   const add = (key, points, domain) => reasons.push({ key, points, domain });
   const silage = input.feedType === "maize_silage";
-  if (v.moisture > (silage ? 70 : 15)) add("highMoisture", 20, "storage");
-  if (v.temperature > 35) add("highTemperature", 20, "freshness");
-  if (v.humidity > 80) add("highHumidity", 15, "storage");
+  const storageProfile = hasStorageProfile(input.feedType);
+  if (storageProfile && v.moisture > (silage ? 70 : 15))
+    add("highMoisture", 20, "storage");
+  if (storageProfile && v.temperature > 35)
+    add("highTemperature", 20, "freshness");
+  if (storageProfile && v.humidity > 80) add("highHumidity", 15, "storage");
   if (silage && v.ph != null && (v.ph > 4.5 || v.ph < 3))
     add("phIssue", 20, "freshness");
   if (input.mould === true) add("mouldReported", 50, "safety");
   if (input.smell === true) add("smellReported", 20, "freshness");
   if (input.foreignMaterial === true) add("foreignReported", 50, "safety");
   const complete =
+    storageProfile &&
     ["temperature", "humidity", "moisture", ...(silage ? ["ph"] : [])].every(
       (k) => v[k] != null,
     ) &&
@@ -86,7 +90,8 @@ export function assess(input, { allowMissing = false } = {}) {
     0,
     100 - reasons.reduce((sum, r) => sum + r.points, 0),
   );
-  const score = allowMissing && !complete ? null : rawScore;
+  const score =
+    !storageProfile || (allowMissing && !complete) ? null : rawScore;
   const risk =
     input.mould || input.foreignMaterial || rawScore < 50
       ? "high"
@@ -111,8 +116,8 @@ export function assess(input, { allowMissing = false } = {}) {
     reasons,
     sensor,
     subscores: {
-      storage: subscore("storage"),
-      freshness: subscore("freshness"),
+      storage: storageProfile ? subscore("storage") : null,
+      freshness: storageProfile ? subscore("freshness") : null,
       safety: null,
       nutrition: null,
     },

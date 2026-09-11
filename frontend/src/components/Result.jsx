@@ -4,6 +4,14 @@ import { goalProfiles } from "../config/goalProfiles.js";
 import { withGoal } from "../services/goals.js";
 import { asReport } from "../services/report.js";
 import SpeechReport from "./SpeechReport.jsx";
+import {
+  BiomassChart,
+  NutritionChart,
+  FqiGauge,
+  NutrientRadarChart,
+  StorageRiskMatrix,
+} from "./AnalysisCharts.jsx";
+import VisionInspection from "./VisionInspection.jsx";
 export default function Result({
   result,
   t,
@@ -49,11 +57,41 @@ export default function Result({
           </span>
         </div>
         <div className={`score ${overall.status}`}>
-          {overall.score ?? "—"}
-          <small>/ 100</small>
+          <FqiGauge score={overall.score} status={overall.status} t={t} />
         </div>
       </div>
       <p className="use-verdict">{t(overall.message)}</p>
+      <VisionInspection
+        image={report.image || result?.image}
+        pastureAnalysis={report.pastureAnalysis}
+        feedType={report.feedIdentification?.feedType || report.feedType || result?.feedType}
+        t={t}
+      />
+      {report.feedIdentification && (
+        <p>
+          {t(
+            report.feedIdentification.confirmed
+              ? "feedConfirmed"
+              : "feedManual",
+          )}
+          : {t(report.feedIdentification.feedType)}
+        </p>
+      )}
+      {report.pastureAnalysis && (
+        <details>
+          <summary>{t("pastureTitle")}</summary>
+          <p>{t("pastureExperimental")}</p>
+          {Object.entries(report.pastureAnalysis.predictions).map(
+            ([key, value]) => (
+              <p key={key}>
+                {t(key)}: {value.toFixed(1)} g
+              </p>
+            ),
+          )}
+          <p>{t("pastureUncertainty")}</p>
+          <BiomassChart value={report.pastureAnalysis} t={t} />
+        </details>
+      )}
       {overall.score == null && <p>{t("scoreUnavailable")}</p>}
       <p className="notice">
         {t("screening")}
@@ -86,6 +124,10 @@ export default function Result({
         </details>
       </section>
       <SpeechReport report={report} t={t} lang={lang} />
+      <div className="nutrition-charts-grid">
+        <NutritionChart nutrition={nutrition} t={t} />
+        <NutrientRadarChart nutrition={nutrition} t={t} />
+      </div>
       <div className="requirement-cards">
         <section
           className="requirement-card"
@@ -93,6 +135,9 @@ export default function Result({
         >
           <h3>🥗 {t("nutritionQuality")}</h3>
           <p>{t("nutritionQuestion")}</p>
+          {nutrition.composition?.sourceType === "UNKNOWN" && (
+            <p>{t("compositionUnavailable")}</p>
+          )}
           <dl>
             {["protein", "moisture", "fiber", "energy", "minerals"].map((k) => {
               const row = nutrition.values[k];
@@ -219,6 +264,7 @@ export default function Result({
               ))}
             </ul>
           </details>
+          <StorageRiskMatrix storage={storage} silage={report.silage} t={t} />
           {report.silage && (
             <details>
               <summary>{t("silageCondition")}</summary>

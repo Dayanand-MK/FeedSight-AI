@@ -22,7 +22,7 @@ async function start(page, { name, existing, photo = false } = {}) {
     await page.locator("input[type=file]").setInputFiles("public/icon-192.png");
     await expect(page.locator("img.feed-preview")).toBeVisible();
   }
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Yes, continue" }).click();
   await expect(page.getByText("Step 3 of 5")).toBeVisible();
 }
 async function storage(page, preset = "Low indicated risk") {
@@ -232,7 +232,7 @@ test("laboratory estimate works offline and unsupported images are rejected", as
     buffer: Buffer.from("not an image"),
   });
   await expect(page.getByRole("alert")).toContainText("Choose a valid");
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Yes, continue" }).click();
   await storage(page);
   await page
     .getByText("Optional laboratory FQI estimate", { exact: true })

@@ -1,0 +1,119 @@
+{
+  "task": "biomass_regression",
+  "status": "experimental",
+  "training_date": "2026-09-11T18:05:41.200242+00:00",
+  "dataset": "CSIRO Image2Biomass local Kaggle release: 357 labelled images",
+  "architecture": "MobileNetV3-Small frozen + ridge",
+  "targets": [
+    "Dry_Green_g",
+    "Dry_Dead_g",
+    "Dry_Clover_g",
+    "GDM_g",
+    "Dry_Total_g"
+  ],
+  "unit": "g",
+  "input_shape": [
+    1,
+    3,
+    224,
+    448
+  ],
+  "preprocessing": "two horizontal halves; pixel-centre nearest to 224x224 each; RGB ImageNet normalization",
+  "classes": [],
+  "confidence_threshold": null,
+  "metrics": {
+    "task": "biomass_regression",
+    "status": "experimental",
+    "device": "cpu",
+    "epochs": 0,
+    "training_method": "frozen ImageNet features + closed-form ridge regression",
+    "alpha": 1000.0,
+    "validation_candidates": [
+      {
+        "alpha": 1.0,
+        "validation_mse_g2": 402.9845637045596
+      },
+      {
+        "alpha": 10.0,
+        "validation_mse_g2": 296.2026749581254
+      },
+      {
+        "alpha": 100.0,
+        "validation_mse_g2": 198.03070791560154
+      },
+      {
+        "alpha": 1000.0,
+        "validation_mse_g2": 180.13743232086088
+      }
+    ],
+    "test_count": 63,
+    "per_target": {
+      "Dry_Green_g": {
+        "mae_g": 11.57269989522298,
+        "rmse_g": 15.798794580840788,
+        "r2": 0.41973093091150837
+      },
+      "Dry_Dead_g": {
+        "mae_g": 10.050039060707698,
+        "rmse_g": 13.408498193857836,
+        "r2": 0.2777833532333366
+      },
+      "Dry_Clover_g": {
+        "mae_g": 11.013124422618324,
+        "rmse_g": 17.02693679221305,
+        "r2": -0.022105218860385634
+      },
+      "GDM_g": {
+        "mae_g": 10.214188157502432,
+        "rmse_g": 13.911833663689208,
+        "r2": 0.6153980508241899
+      },
+      "Dry_Total_g": {
+        "mae_g": 13.510123912484309,
+        "rmse_g": 17.52834834006657,
+        "r2": 0.5797122719818386
+      }
+    },
+    "training_mean_baseline": {
+      "Dry_Green_g": {
+        "mae_g": 20.85252102377765,
+        "rmse_g": 23.93158521130922,
+        "r2": -0.33144873851524004
+      },
+      "Dry_Dead_g": {
+        "mae_g": 12.344488143048386,
+        "rmse_g": 15.791276917596957,
+        "r2": -0.0017093273863373337
+      },
+      "Dry_Clover_g": {
+        "mae_g": 14.133605284630585,
+        "rmse_g": 20.676537554904773,
+        "r2": -0.5072253408023004
+      },
+      "GDM_g": {
+        "mae_g": 18.29606826034296,
+        "rmse_g": 22.43261536081521,
+        "r2": -5.866417691846593e-06
+      },
+      "Dry_Total_g": {
+        "mae_g": 22.581603595333718,
+        "rmse_g": 27.044153570291243,
+        "r2": -0.0004871276662066215
+      }
+    },
+    "limitations": [
+      "Experimental pasture quadrat biomass in grams, not feed classification or nutrients.",
+      "Only top-down pasture images matching the source acquisition scale are in scope.",
+      "State/date groups are proxies; no farm identifiers or independently validated uncertainty.",
+      "No safety clearance, toxin estimate, moisture percentage, or kg/ha conversion."
+    ]
+  },
+  "model_bytes": 3844187,
+  "limitations": [
+    "Experimental pasture quadrat biomass in grams, not feed classification or nutrients.",
+    "Only top-down pasture images matching the source acquisition scale are in scope.",
+    "State/date groups are proxies; no farm identifiers or independently validated uncertainty.",
+    "No safety clearance, toxin estimate, moisture percentage, or kg/ha conversion."
+  ],
+  "onnx_parity_max_error_g": 5.7220458984375e-06
+}

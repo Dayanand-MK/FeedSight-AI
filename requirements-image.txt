@@ -1,0 +1,8 @@
+# Install separately from the existing tabular FQI runtime.
+torch==2.14.0
+torchvision==0.29.0
+pillow==12.3.0
+scikit-learn>=1.5,<2
+pandas>=2,<4
+onnx==1.22.0
+onnxruntime==1.30.0

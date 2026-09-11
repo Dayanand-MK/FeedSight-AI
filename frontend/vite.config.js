@@ -37,6 +37,22 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,png,svg,json}"],
         navigateFallback: "/index.html",
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        globIgnores: ["ort/**", "models/biomass/**"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) =>
+              url.origin === self.location.origin &&
+              (url.pathname.startsWith("/ort/") ||
+                url.pathname.startsWith("/models/biomass/")),
+            handler: "NetworkFirst",
+            options: {
+              networkTimeoutSeconds: 3,
+              cacheName: "feedsight-biomass-v1",
+              cacheableResponse: { statuses: [200] },
+              expiration: { maxEntries: 6, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+        ],
       },
     }),
   ],

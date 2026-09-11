@@ -296,9 +296,9 @@ export const farmerStrings = {
     "बिना जाँचे खतरे बाकी हैं",
   ],
   photoLimit: [
-    "The photo is a record only. Automatic mould and chemical testing are unavailable.",
-    "படம் ஒரு பதிவு மட்டும். தானியங்கி பூஞ்சை மற்றும் வேதியியல் சோதனை கிடைக்கவில்லை.",
-    "तस्वीर केवल रिकॉर्ड है। स्वचालित फफूँद और रासायनिक जाँच उपलब्ध नहीं है।",
+    "Automatic mould and chemical testing are unavailable. Optional pasture biomass analysis is separate from feed safety.",
+    "தானியங்கி பூஞ்சை மற்றும் வேதியியல் சோதனை கிடைக்கவில்லை. விருப்ப மேய்ச்சல் உயிர்த்திணிவு பகுப்பாய்வு தீவன பாதுகாப்பிலிருந்து தனியானது.",
+    "स्वचालित फफूँद और रासायनिक जाँच उपलब्ध नहीं है। वैकल्पिक चरागाह बायोमास विश्लेषण चारा सुरक्षा से अलग है।",
   ],
   nirUnavailable: [
     "No spectroscopy readings are available.",

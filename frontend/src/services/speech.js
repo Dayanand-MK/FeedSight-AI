@@ -1,5 +1,14 @@
 import { goalProfiles } from "../config/goalProfiles.js";
-export const voiceLanguages = { en: "en-IN", ta: "ta-IN", hi: "hi-IN" };
+export const voiceLanguages = {
+  en: "en-IN",
+  ta: "ta-IN",
+  hi: "hi-IN",
+  kn: "kn-IN",
+  te: "te-IN",
+  mr: "mr-IN",
+  bn: "bn-IN",
+  pa: "pa-IN",
+};
 export function localVoice(voices, lang) {
   return (
     voices.find(
@@ -10,6 +19,16 @@ export function localVoice(voices, lang) {
     voices.find(
       (v) => v.localService && v.lang.toLowerCase().split("-")[0] === lang,
     ) ||
+    null
+  );
+}
+export function anyVoice(voices, lang) {
+  return (
+    localVoice(voices, lang) ||
+    voices.find(
+      (v) => v.lang.toLowerCase() === voiceLanguages[lang]?.toLowerCase(),
+    ) ||
+    voices.find((v) => v.lang.toLowerCase().split("-")[0] === lang) ||
     null
   );
 }

@@ -1,4 +1,6 @@
 import GoalPicker from "../components/GoalPicker.jsx";
+import PastureAnalysis from "../components/PastureAnalysis.jsx";
+import { feedTypes } from "../config/feedComposition.js";
 import { withGoal } from "../services/goals.js";
 import { useEffect, useRef, useState } from "react";
 import { limits } from "../services/assessment.js";
@@ -20,6 +22,7 @@ export default function Test({
   initialContext = {},
 }) {
   const initialBatch = batches.find((b) => b.id === initialBatchId);
+  const [photoFile, setPhotoFile] = useState(null);
   const [input, setInput] = useState({
     feedType: initialBatch?.feedType || "maize_silage",
     batchName: "",
@@ -61,12 +64,16 @@ export default function Test({
   };
   async function photo(file) {
     const version = ++photoVersion.current;
-    change({ image: null });
+    setPhotoFile(null);
+    change({ image: null, pastureAnalysis: null });
     if (!file) return;
     setBusy(true);
     try {
       const image = await prepareImage(file);
-      if (version === photoVersion.current) change({ image });
+      if (version === photoVersion.current) {
+        setPhotoFile(file);
+        change({ image });
+      }
     } catch {
       if (version === photoVersion.current) setError("invalidImage");
     } finally {
@@ -83,6 +90,7 @@ export default function Test({
       setError("targetReferenceNeeded");
       return;
     }
+    if (step === 2) change({ feedTypeConfirmed: input.feedType });
     setStep((s) => s + 1);
     setError("");
   }
@@ -122,6 +130,103 @@ export default function Test({
       setBusy(false);
     }
   }
+  function loadJudgePreset(type) {
+    let presetInput;
+    if (type === "safe_tmr") {
+      presetInput = {
+        feedType: "maize_silage",
+        batchName: "SIH Demo: Balanced Dairy TMR",
+        source: "virtual",
+        observationSource: "virtual",
+        temperature: 24,
+        humidity: 62,
+        moisture: 64,
+        ph: 3.9,
+        storageAge: 21,
+        mould: false,
+        smell: false,
+        foreignMaterial: false,
+        image: null,
+        animalType: "dairy_cow",
+        goal: "high_yield",
+      };
+    } else if (type === "mould_spoilage") {
+      presetInput = {
+        feedType: "maize_silage",
+        batchName: "SIH Demo: Mould & Spoilage Hazard",
+        source: "virtual",
+        observationSource: "virtual",
+        temperature: 42,
+        humidity: 89,
+        moisture: 79,
+        ph: 5.9,
+        storageAge: 52,
+        mould: true,
+        smell: true,
+        foreignMaterial: false,
+        image: null,
+        animalType: "dairy_cow",
+        goal: "general",
+      };
+    } else if (type === "storage_heat") {
+      presetInput = {
+        feedType: "dry_feed",
+        batchName: "SIH Demo: Storage Moisture Spike",
+        source: "virtual",
+        observationSource: "virtual",
+        temperature: 37,
+        humidity: 86,
+        moisture: 21,
+        ph: "",
+        storageAge: 40,
+        mould: false,
+        smell: false,
+        foreignMaterial: false,
+        image: null,
+        animalType: "dairy_cow",
+        goal: "general",
+      };
+    } else if (type === "pasture_biomass") {
+      presetInput = {
+        feedType: "pasture_grass",
+        batchName: "SIH Demo: Dual-View Pasture Canopy",
+        source: "virtual",
+        observationSource: "virtual",
+        temperature: 22,
+        humidity: 65,
+        moisture: 78,
+        ph: "",
+        storageAge: 1,
+        mould: false,
+        smell: false,
+        foreignMaterial: false,
+        pastureAnalysis: {
+          task: "biomass_regression",
+          status: "experimental",
+          unit: "g",
+          confidence: null,
+          predictions: {
+            Dry_Green_g: 142.5,
+            Dry_Dead_g: 22.0,
+            Dry_Clover_g: 38.5,
+            GDM_g: 181.0,
+            Dry_Total_g: 203.0,
+          },
+          model: "dual_view_cnn",
+          scopeConfirmed: true,
+        },
+        image: null,
+        animalType: "dairy_cow",
+        goal: "general",
+      };
+    }
+    if (presetInput) {
+      setInput(presetInput);
+      setResult(buildReport(presetInput, { batchId: crypto.randomUUID() }));
+      setSaved(false);
+      setError("");
+    }
+  }
   const titles = [
     "selectFeed",
     "image",
@@ -140,6 +245,44 @@ export default function Test({
         <p className="error" role="alert">
           {t(error)}
         </p>
+      )}
+      {!result && (
+        <aside className="judge-demo-bar" aria-label="Judge Demo Showcase">
+          <div className="judge-demo-header">
+            <span className="judge-badge">⚡ SIH 2026 EVALUATION SHOWCASE</span>
+            <span className="judge-subtitle">1-Click Realistic Verification Scenarios</span>
+          </div>
+          <div className="judge-demo-presets">
+            <button
+              type="button"
+              className="judge-btn preset-safe"
+              onClick={() => loadJudgePreset("safe_tmr")}
+            >
+              🥛 Balanced Dairy TMR (Optimal FQI)
+            </button>
+            <button
+              type="button"
+              className="judge-btn preset-danger"
+              onClick={() => loadJudgePreset("mould_spoilage")}
+            >
+              ⛔ Mould & Spoilage Hazard (Action Alert)
+            </button>
+            <button
+              type="button"
+              className="judge-btn preset-warning"
+              onClick={() => loadJudgePreset("storage_heat")}
+            >
+              🔥 Storage Heating & High Humidity
+            </button>
+            <button
+              type="button"
+              className="judge-btn preset-pasture"
+              onClick={() => loadJudgePreset("pasture_biomass")}
+            >
+              🌱 Pasture Canopy Biomass (Dual-View AI)
+            </button>
+          </div>
+        </aside>
       )}
       {result ? (
         <>
@@ -196,7 +339,7 @@ export default function Test({
                 </select>
               </label>
               <div className="feed-options">
-                {["maize_silage", "dry_feed"].map((k, i) => (
+                {feedTypes.map((k, i) => (
                   <button
                     type="button"
                     disabled={!!batchId}
@@ -252,12 +395,32 @@ export default function Test({
                   <button
                     type="button"
                     className="quiet"
-                    onClick={() => change({ image: null })}
+                    onClick={() => {
+                      setPhotoFile(null);
+                      change({ image: null, pastureAnalysis: null });
+                    }}
                   >
                     {t("remove")}
                   </button>
+                  <PastureAnalysis
+                    file={photoFile}
+                    value={input.pastureAnalysis}
+                    onResult={(pastureAnalysis) => change({ pastureAnalysis })}
+                    t={t}
+                  />
                 </>
               )}
+              <p>{t("feedManual")}</p>
+              <strong>
+                {t("feedConfirm")} {t(input.feedType)}
+              </strong>
+              <button
+                type="button"
+                className="quiet"
+                onClick={() => setStep(1)}
+              >
+                {t("feedChange")}
+              </button>
             </>
           )}
           {step === 3 && (
@@ -329,7 +492,16 @@ export default function Test({
               </button>
             )}
             <button className="primary" disabled={busy} type="submit">
-              {busy ? t("checking") : t(step < 5 ? "next" : "checkFeed")} →
+              {busy
+                ? t("checking")
+                : t(
+                    step === 2
+                      ? "feedConfirmYes"
+                      : step < 5
+                        ? "next"
+                        : "checkFeed",
+                  )}{" "}
+              →
             </button>
           </div>
           <details>
