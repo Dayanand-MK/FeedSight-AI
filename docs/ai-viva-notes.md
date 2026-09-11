@@ -1,5 +1,19 @@
 # AI viva notes — actual implementation
 
+**How are complements recommended?** Compatible entered nutrients are compared
+with user-documented ingredient minima. A deterministic safety-first engine
+selects sourced qualitative complement categories for supported gaps and known
+animal contexts. These minima do not establish whole-ration requirements. RGB
+images are not assumed to measure nutrients.
+
+**Is recommendation another ML model?** No. Local reference/rule logic is used
+for explainability and offline operation. The current/potential visualization
+shows a possible nutrient role, not calculated post-feeding composition.
+
+**What prevents over-supplementation?** No option is produced for a met minimum,
+unknown comparison, incompatible units, or a blocking safety/storage condition.
+No exact quantities or mineral recommendations are fabricated.
+
 - **Dataset?** Local CSIRO Image2Biomass release: 358 photos, 357 labelled and
   one unlabelled example, 3 CSVs. Five rows per labelled image encode five targets.
 - **Classes?** None for this model. It predicts green, dead, clover, green dry

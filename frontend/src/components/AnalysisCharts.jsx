@@ -79,7 +79,11 @@ export function NutritionChart({ nutrition, t }) {
   const [key, setKey] = useState("protein");
   const row = nutrition.values[key];
   const known = typeof row.value === "number" && Number.isFinite(row.value);
-  const target = typeof row.target === "number" && Number.isFinite(row.target);
+  const target =
+    typeof row.target === "number" &&
+    Number.isFinite(row.target) &&
+    (row.targetUnit || row.unit) === row.unit &&
+    row.status !== "balanceUnavailable";
   const scale = Math.max(row.value || 0, row.target || 0, 1);
   return (
     <section className="analysis-chart" aria-label={t("nutritionExplore")}>
@@ -285,7 +289,8 @@ export function FqiGauge({ score, status = "unknown", t }) {
   const radius = 60;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = valid
-    ? circumference - (circumference * 0.75 * Math.min(100, Math.max(0, displayScore))) / 100
+    ? circumference -
+      (circumference * 0.75 * Math.min(100, Math.max(0, displayScore))) / 100
     : circumference;
 
   const colorMap = {
@@ -298,7 +303,12 @@ export function FqiGauge({ score, status = "unknown", t }) {
 
   return (
     <div className="fqi-gauge-container">
-      <svg className="fqi-gauge-svg" viewBox="0 0 160 160" role="img" aria-label={`Feed Health Score: ${valid ? displayScore : "Unavailable"}`}>
+      <svg
+        className="fqi-gauge-svg"
+        viewBox="0 0 160 160"
+        role="img"
+        aria-label={`Feed Health Score: ${valid ? displayScore : "Unavailable"}`}
+      >
         <circle
           cx="80"
           cy="80"
@@ -326,13 +336,25 @@ export function FqiGauge({ score, status = "unknown", t }) {
             className="fqi-gauge-arc"
           />
         )}
-        <text x="80" y="74" textAnchor="middle" className="fqi-gauge-val" fill={valid ? color : "#888"}>
+        <text
+          x="80"
+          y="74"
+          textAnchor="middle"
+          className="fqi-gauge-val"
+          fill={valid ? color : "#888"}
+        >
           {valid ? displayScore : "—"}
         </text>
         <text x="80" y="96" textAnchor="middle" className="fqi-gauge-denom">
           / 100
         </text>
-        <text x="80" y="122" textAnchor="middle" className="fqi-gauge-sublabel" fill={color}>
+        <text
+          x="80"
+          y="122"
+          textAnchor="middle"
+          className="fqi-gauge-sublabel"
+          fill={color}
+        >
           {t(status) || status.toUpperCase()}
         </text>
       </svg>
@@ -346,14 +368,23 @@ export function NutrientRadarChart({ nutrition, t }) {
     { key: "energy", label: "Energy (TDN)", max: 80 },
     { key: "fiber", label: "Fiber (NDF)", max: 60 },
     { key: "minerals", label: "Minerals", max: 12 },
-    { key: "moisture", label: "Dry Matter", max: 100, transform: (v) => (v != null ? 100 - v : null) },
+    {
+      key: "moisture",
+      label: "Dry Matter",
+      max: 100,
+      transform: (v) => (v != null ? 100 - v : null),
+    },
   ];
-  const center = 120, r = 70;
+  const center = 120,
+    r = 70;
   const points = metrics.map((m, i) => {
     const angle = (Math.PI * 2 * i) / metrics.length - Math.PI / 2;
     const rawVal = nutrition?.values?.[m.key]?.value;
     const val = m.transform ? m.transform(rawVal) : rawVal;
-    const norm = typeof val === "number" && Number.isFinite(val) ? Math.min(1, Math.max(0.12, val / m.max)) : 0.25;
+    const norm =
+      typeof val === "number" && Number.isFinite(val)
+        ? Math.min(1, Math.max(0.12, val / m.max))
+        : 0.25;
     const x = center + r * norm * Math.cos(angle);
     const y = center + r * norm * Math.sin(angle);
     const labelX = center + (r + 26) * Math.cos(angle);
@@ -361,12 +392,19 @@ export function NutrientRadarChart({ nutrition, t }) {
     return { ...m, x, y, labelX, labelY, val, angle };
   });
 
-  const polygonStr = points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const polygonStr = points
+    .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+    .join(" ");
 
   return (
-    <section className="analysis-chart radar-chart" aria-label="Nutrient Balance Profile">
+    <section
+      className="analysis-chart radar-chart"
+      aria-label="Nutrient Balance Profile"
+    >
       <h3>🧬 {t("nutritionQuality") || "Nutrient Balance Profile"}</h3>
-      <p className="chart-note">Multi-nutrient distribution compared with dairy dietary targets.</p>
+      <p className="chart-note">
+        Multi-nutrient distribution compared with dairy dietary targets.
+      </p>
       <div className="radar-svg-wrap">
         <svg viewBox="0 0 240 240" className="radar-svg" role="img">
           {[0.25, 0.5, 0.75, 1].map((scale) => (
@@ -399,7 +437,14 @@ export function NutrientRadarChart({ nutrition, t }) {
           />
           {points.map((p, i) => (
             <g key={i}>
-              <circle cx={p.x} cy={p.y} r="4" fill="#2e7d32" stroke="#fff" strokeWidth="1.5" />
+              <circle
+                cx={p.x}
+                cy={p.y}
+                r="4"
+                fill="#2e7d32"
+                stroke="#fff"
+                strokeWidth="1.5"
+              />
               <text
                 x={p.labelX}
                 y={p.labelY}
@@ -430,43 +475,132 @@ export function StorageRiskMatrix({ storage, silage, t }) {
   const currentY = hasReadings ? Math.min(150, Math.max(30, y(temp))) : null;
 
   return (
-    <section className="analysis-chart risk-matrix-chart" aria-label="Storage Stability Matrix">
+    <section
+      className="analysis-chart risk-matrix-chart"
+      aria-label="Storage Stability Matrix"
+    >
       <h3>🌡 {t("storageMonitor") || "Storage Stability Envelope"}</h3>
       <p className="chart-note">
-        Real-time psychrometric risk envelope: moisture and temperature interaction governing spoilage.
+        Real-time psychrometric risk envelope: moisture and temperature
+        interaction governing spoilage.
       </p>
       <div className="matrix-svg-wrap">
         <svg viewBox="0 0 320 190" className="matrix-svg" role="img">
-          <rect x="40" y="55" width="95" height="95" fill="rgba(76, 175, 80, 0.16)" rx="4" />
-          <text x="87" y="105" textAnchor="middle" fontSize="11" fill="#2e7d32" fontWeight="600">
+          <rect
+            x="40"
+            y="55"
+            width="95"
+            height="95"
+            fill="rgba(76, 175, 80, 0.16)"
+            rx="4"
+          />
+          <text
+            x="87"
+            y="105"
+            textAnchor="middle"
+            fontSize="11"
+            fill="#2e7d32"
+            fontWeight="600"
+          >
             Safe Zone
           </text>
 
-          <rect x="135" y="40" width="80" height="110" fill="rgba(255, 152, 0, 0.16)" rx="4" />
-          <text x="175" y="95" textAnchor="middle" fontSize="10" fill="#e65100" fontWeight="600">
+          <rect
+            x="135"
+            y="40"
+            width="80"
+            height="110"
+            fill="rgba(255, 152, 0, 0.16)"
+            rx="4"
+          />
+          <text
+            x="175"
+            y="95"
+            textAnchor="middle"
+            fontSize="10"
+            fill="#e65100"
+            fontWeight="600"
+          >
             Caution
           </text>
 
-          <rect x="215" y="25" width="70" height="125" fill="rgba(244, 67, 54, 0.16)" rx="4" />
-          <text x="250" y="85" textAnchor="middle" fontSize="10" fill="#c62828" fontWeight="600">
+          <rect
+            x="215"
+            y="25"
+            width="70"
+            height="125"
+            fill="rgba(244, 67, 54, 0.16)"
+            rx="4"
+          />
+          <text
+            x="250"
+            y="85"
+            textAnchor="middle"
+            fontSize="10"
+            fill="#c62828"
+            fontWeight="600"
+          >
             High Risk
           </text>
 
-          <line x1="40" y1="150" x2="285" y2="150" stroke="#888" strokeWidth="1.5" />
-          <line x1="40" y1="25" x2="40" y2="150" stroke="#888" strokeWidth="1.5" />
+          <line
+            x1="40"
+            y1="150"
+            x2="285"
+            y2="150"
+            stroke="#888"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="40"
+            y1="25"
+            x2="40"
+            y2="150"
+            stroke="#888"
+            strokeWidth="1.5"
+          />
 
           <text x="162" y="172" textAnchor="middle" fontSize="10" fill="#555">
             Moisture % (10% → 90%)
           </text>
-          <text x="16" y="90" textAnchor="middle" fontSize="10" fill="#555" transform="rotate(-90 16 90)">
+          <text
+            x="16"
+            y="90"
+            textAnchor="middle"
+            fontSize="10"
+            fill="#555"
+            transform="rotate(-90 16 90)"
+          >
             Temp °C (10 → 50°C)
           </text>
 
           {hasReadings && (
             <g className="matrix-current-point">
-              <circle cx={currentX} cy={currentY} r="6" fill="#1565c0" stroke="#fff" strokeWidth="2" />
-              <circle cx={currentX} cy={currentY} r="11" fill="none" stroke="#1565c0" opacity="0.4" className="pulse-circle" />
-              <text x={currentX} y={currentY - 11} textAnchor="middle" fontSize="10" fontWeight="700" fill="#1565c0">
+              <circle
+                cx={currentX}
+                cy={currentY}
+                r="6"
+                fill="#1565c0"
+                stroke="#fff"
+                strokeWidth="2"
+              />
+              <circle
+                cx={currentX}
+                cy={currentY}
+                r="11"
+                fill="none"
+                stroke="#1565c0"
+                opacity="0.4"
+                className="pulse-circle"
+              />
+              <text
+                x={currentX}
+                y={currentY - 11}
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="700"
+                fill="#1565c0"
+              >
                 Current ({moist}%, {temp}°C)
               </text>
             </g>

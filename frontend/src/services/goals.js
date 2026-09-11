@@ -1,3 +1,4 @@
+import { nutrientBalance } from "./nutrientBalance.js";
 import {
   goalProfiles,
   goalRuleVersion,
@@ -154,7 +155,8 @@ export function evaluateGoal(report, selected = "general") {
 
 // Only the goal decision changes: preserve measurements, inference, timestamps and safety.
 export function withGoal(report, selected) {
-  return { ...report, goal: evaluateGoal(report, selected) };
+  const goal = evaluateGoal(report, selected);
+  return { ...report, goal, nutrientBalance: nutrientBalance(report, goal) };
 }
 
 export function goalHistory(tests) {

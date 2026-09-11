@@ -74,5 +74,21 @@ export function spokenReport(report, t) {
     ...report.feedSuggestions.items.map(t),
     t("retest"),
   );
+  const balance = report.nutrientBalance;
+  if (balance) {
+    lines.push(t("balanceTitle"));
+    if (balance.blocked) lines.push(t(balance.reason));
+    else {
+      const gap = balance.rows.find((row) => row.status === "balanceGap");
+      if (gap) {
+        lines.push(t(gap.key), t(gap.reason));
+        const option = balance.options.find((o) =>
+          o.addresses.includes(gap.key),
+        );
+        if (option)
+          lines.push(t(option.label), t(option.role), t("balanceProfessional"));
+      } else lines.push(t("balanceNoCorrectionOrUnknown"));
+    }
+  }
   return lines.join(" ");
 }

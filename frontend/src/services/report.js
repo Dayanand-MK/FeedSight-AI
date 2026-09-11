@@ -41,9 +41,13 @@ function nutrition(input, sensor) {
       input.targets?.enabled && key !== "energy"
         ? optionalNumber(input.targets?.[key], 0, 100)
         : null;
+    const unit = input.nutrientUnits?.[key] || config.unit;
+    const targetUnit = input.targetUnits?.[key] || config.unit;
+    const comparable = unit === config.unit && targetUnit === config.unit;
     values[key] = {
       value,
-      unit: config.unit,
+      unit,
+      targetUnit,
       source: value == null ? "notAvailable" : "entered",
       provenance: value == null ? "UNKNOWN" : "USER_REPORTED",
       target,
@@ -51,12 +55,17 @@ function nutrition(input, sensor) {
       status:
         value == null
           ? "notAvailable"
-          : target == null
-            ? "insufficient"
-            : value < target
-              ? "belowTarget"
-              : "meetsMinimum",
-      gap: value != null && target != null ? Math.max(0, target - value) : null,
+          : !comparable
+            ? "balanceUnavailable"
+            : target == null
+              ? "insufficient"
+              : value < target
+                ? "belowTarget"
+                : "meetsMinimum",
+      gap:
+        comparable && value != null && target != null
+          ? Math.max(0, target - value)
+          : null,
     };
   }
   values.moisture = {

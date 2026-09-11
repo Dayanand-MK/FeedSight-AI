@@ -1,0 +1,36 @@
+// Sourced qualitative roles; no product composition, doses or animal requirements.
+export const feedComplements = [
+  {
+    id: "protein_feed",
+    label: "balanceProteinOption",
+    supports: ["protein"],
+    suitableFor: ["lactating", "dryCow", "heifer"],
+    role: "balanceProteinRole",
+    caution: "balanceProfessional",
+    source: "NDDB — Compound Cattle Feed",
+    url: "https://www.nddb.org/services/animalnutrition/cattlefeed",
+    verifiedScope: "qualitative category only",
+  },
+  {
+    id: "roughage",
+    label: "balanceRoughageOption",
+    supports: ["fiber"],
+    suitableFor: ["lactating", "dryCow", "heifer"],
+    role: "balanceRoughageRole",
+    caution: "balanceProfessional",
+    source: "NDDB — Total Mixed Ration",
+    url: "https://www.nddb.coop/services/animalnutrition/crop-residue-management/total-mixed-ration-dry",
+    verifiedScope: "qualitative category only",
+  },
+  {
+    id: "balanced_feed",
+    label: "balanceCompoundOption",
+    supports: ["protein"],
+    suitableFor: ["lactating", "dryCow", "heifer"],
+    role: "balanceCompoundRole",
+    caution: "balanceProfessional",
+    source: "NDDB — Ration Balancing Programme",
+    url: "https://www.nddb.coop/services/animalnutrition/programmes/ration-balancing-programme",
+    verifiedScope: "professional formulation category only",
+  },
+];

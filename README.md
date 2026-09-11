@@ -4,6 +4,13 @@
 
 An offline-first SIH 2026 feed decision-support prototype combining feed quality screening, safety, animal context, farmer goals and batch history.
 
+The additive **Nutrient Balance** engine compares compatible protein/NDF values
+against user-documented ingredient minima, shows interactive conditional
+complement categories, and saves the decision with each report. It never infers
+animal requirements or post-supplement composition. See
+[nutrient balancing](docs/nutrient-balancing.md) for sources, safety gates, unit
+validation, goal switching, offline behavior and scientific limits.
+
 Farmers often have disconnected measurements and little batch history. FeedSight combines entered observations, optional photos, clearly labelled virtual sensors and laboratory FQI estimates in one local workflow. It does **not** certify feed safety or measure toxins from a camera.
 
 The farmer update adds a five-step **Test my feed → Check feed** journey, four explicit SIH result cards, optional animal/nutrient context, nutritionist-supplied ingredient comparisons, safety-first feed suggestions, local-language **Listen to report** controls, and a dedicated **Storage Monitor**. See [the complete SIH requirement-to-feature mapping](docs/sih-requirements.md), also represented in the application's About / technical details screen.

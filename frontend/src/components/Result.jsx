@@ -4,6 +4,7 @@ import { goalProfiles } from "../config/goalProfiles.js";
 import { withGoal } from "../services/goals.js";
 import { asReport } from "../services/report.js";
 import SpeechReport from "./SpeechReport.jsx";
+import NutrientBalance from "./NutrientBalance.jsx";
 import {
   BiomassChart,
   NutritionChart,
@@ -64,7 +65,11 @@ export default function Result({
       <VisionInspection
         image={report.image || result?.image}
         pastureAnalysis={report.pastureAnalysis}
-        feedType={report.feedIdentification?.feedType || report.feedType || result?.feedType}
+        feedType={
+          report.feedIdentification?.feedType ||
+          report.feedType ||
+          result?.feedType
+        }
         t={t}
       />
       {report.feedIdentification && (
@@ -124,6 +129,7 @@ export default function Result({
         </details>
       </section>
       <SpeechReport report={report} t={t} lang={lang} />
+      <NutrientBalance balance={report.nutrientBalance} t={t} />
       <div className="nutrition-charts-grid">
         <NutritionChart nutrition={nutrition} t={t} />
         <NutrientRadarChart nutrition={nutrition} t={t} />

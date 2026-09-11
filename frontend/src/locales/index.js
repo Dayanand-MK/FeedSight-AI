@@ -1,4 +1,5 @@
 import { farmerStrings } from "./farmer.js";
+import { balanceStrings } from "./balance.js";
 import { cloudStrings } from "./cloud.js";
 import { goalStrings } from "./goals.js";
 import { biomassStrings } from "./biomass.js";
@@ -383,6 +384,7 @@ const strings = {
   ],
 };
 Object.assign(strings, farmerStrings);
+Object.assign(strings, balanceStrings);
 Object.assign(strings, cloudStrings);
 Object.assign(strings, goalStrings);
 Object.assign(strings, biomassStrings);
