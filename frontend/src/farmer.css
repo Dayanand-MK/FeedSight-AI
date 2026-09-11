@@ -826,3 +826,15 @@ nav button {
     grid-template-columns: 1fr;
   }
 }
+.nutrient-balance .table-wrap table {
+  min-width: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+.nutrient-balance .table-wrap th,
+.nutrient-balance .table-wrap td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding: 8px 5px;
+  vertical-align: top;
+}
