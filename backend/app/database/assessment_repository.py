@@ -18,6 +18,7 @@ def save_assessment(
         INSERT INTO assessments (
             sample_id,
             feed_type,
+            source,
             moisture,
             temperature,
             ph,
@@ -30,11 +31,12 @@ def save_assessment(
             alerts,
             recommendation
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             sample_id,
             sample.feed_type,
+            sample.source,
             sample.moisture,
             sample.temperature,
             sample.ph,

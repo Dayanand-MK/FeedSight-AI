@@ -14,6 +14,7 @@ def sync_assessments():
 
     assessments = get_unsynced_assessments()
     synced_count = 0
+    failed_count = 0
 
     for item in assessments:
         try:
@@ -34,9 +35,11 @@ def sync_assessments():
             synced_count += 1
 
         except Exception:
+            failed_count += 1
             continue
 
     return {
         "enabled" : True,
         "synced" : synced_count,
+        "failed": failed_count,
     }

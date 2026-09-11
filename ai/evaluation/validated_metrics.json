@@ -1,0 +1,63 @@
+{
+  "selected": "gradient_boosting",
+  "selection": "minimum training-only grouped CV RMSE",
+  "group_column": "ref.trial",
+  "train_trials": [
+    "1",
+    "2.a.1.b",
+    "2.a.2",
+    "2.b"
+  ],
+  "test_trials": [
+    "2.a.1.a"
+  ],
+  "train_rows": 1169,
+  "test_rows": 315,
+  "validation": {
+    "ridge": {
+      "MAE": 8.249324660636878,
+      "RMSE": 9.89505658626309,
+      "R2": -0.10426934228787657,
+      "fold_R2": [
+        0.4956479731512694,
+        0.843297868176411,
+        -2.4337940988541598,
+        0.6777708883749732
+      ]
+    },
+    "random_forest": {
+      "MAE": 4.495694717202653,
+      "RMSE": 5.6005952580700376,
+      "R2": 0.6787141118348605,
+      "fold_R2": [
+        0.5421548303019701,
+        0.7985900301738126,
+        0.4403545964156361,
+        0.9337569904480234
+      ]
+    },
+    "gradient_boosting": {
+      "MAE": 3.6826618371262163,
+      "RMSE": 4.79234054450351,
+      "R2": 0.7546016338045903,
+      "fold_R2": [
+        0.5552392031077169,
+        0.8475105525470756,
+        0.6472235341360326,
+        0.9684332454275362
+      ]
+    }
+  },
+  "holdout": {
+    "MAE": 3.0864419320793712,
+    "RMSE": 4.50458180865861,
+    "R2": 0.8306024004712191
+  },
+  "limitations": [
+    "Only five trial groups; one held-out trial is not external validation.",
+    "FQI may be calculated from fermentation features; predicting the index does not validate toxin safety or causal effects.",
+    "No calibrated confidence or Good/Moderate/Poor labels.",
+    "Nutrition targets exist but a validated nutrition model is not provided.",
+    "No trained vision model or spectral arrays."
+  ]
+}

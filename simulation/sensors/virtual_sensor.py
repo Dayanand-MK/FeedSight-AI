@@ -17,6 +17,7 @@ def generate_sensor_reading(scenario : str = "good", feed_type : str = "maize_si
     ranges = SENSOR_RANGES[scenario]
 
     return {
+        "source": "virtual",
         "feed_type" : feed_type,
         "moisture" : random_value(ranges["moisture"]),
         "temperature" : random_value(ranges["temperature"]),

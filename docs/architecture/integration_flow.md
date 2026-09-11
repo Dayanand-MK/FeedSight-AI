@@ -1,5 +1,7 @@
 # FeedSight-AI Integration Flow
 
+> Update, 10 September 2026: this document preserves the original backend integration design. The current offline React/Dexie PWA, browser FQI export, separate grouped evaluation, and authenticated browser synchronization are described in the root README and `docs/scoring-and-limitations.md`. Metrics below are historical random-split model-selection results, not independent validation. The PWA no longer requires FastAPI for farmer inference.
+
 ## Overview
 
 FeedSight-AI combines virtual IoT monitoring with an AI-based

@@ -5,7 +5,7 @@ def assess_feed(sample : FeedSample) -> PredictionResult:
     score = 100.0
     alerts = []
 
-    if sample.moisture > 70:
+    if sample.moisture > (70 if sample.feed_type == "maize_silage" else 15):
         score -= 20
         alerts.append("High moisture detected")
 
@@ -13,7 +13,7 @@ def assess_feed(sample : FeedSample) -> PredictionResult:
         score -= 20
         alerts.append("High temperature detected")
 
-    if sample.ph > 6:
+    if sample.feed_type == "maize_silage" and (sample.ph > 4.5 or sample.ph < 3):
         score -= 20
         alerts.append("Abnormal pH level")
 
@@ -41,13 +41,13 @@ def assess_feed(sample : FeedSample) -> PredictionResult:
         )
 
     else:
-        recommendation = "Feed conditions are within the expected range."
+        recommendation = "No configured screening flags. Continue inspection; this is not a safety certificate."
 
     return PredictionResult(
         quality_class = quality_class,
         quality_score = score,
         spoilage_risk = spoilage_risk,
-        confidence = 0.70,
+        confidence = None,
         alerts = alerts,
         recommendation = recommendation,
     )

@@ -5,7 +5,7 @@ from supabase import Client, create_client
 load_dotenv()
 
 def get_supabase_client() -> Client | None:
-    enabled = os.getenv("SUPABASE_ENABELED", "False").lower() == "true"
+    enabled = os.getenv("SUPABASE_ENABLED", os.getenv("SUPABASE_ENABELED", "False")).lower() == "true"
 
     if not enabled:
         return None

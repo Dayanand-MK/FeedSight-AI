@@ -1,0 +1,14 @@
+# Minimal runtime used for the validated pipeline, optional API, and tests.
+# The original full requirements.txt remains available for older evaluation plots.
+pandas==3.0.5
+openpyxl==3.1.5
+scikit-learn==1.7.2
+numpy==2.5.3
+scipy==1.18.1
+joblib==1.6.0
+fastapi==0.141.1
+uvicorn==0.52.4
+python-dotenv==1.2.3
+supabase==2.31.0
+pytest==9.1.1
+httpx==0.28.1

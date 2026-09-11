@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class FQIPredictionRequest(BaseModel):
+    model_config = ConfigDict(allow_inf_nan=False)
     ph: float = Field(..., ge=0, le=14)
     ammonia: float = Field(..., ge=0)
     lactic_acid: float = Field(..., ge=0)

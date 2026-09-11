@@ -1,10 +1,11 @@
-from typing import Optional
-from pydantic import BaseModel, Field
+from typing import Optional, Literal
+from pydantic import BaseModel, Field, ConfigDict
 
 class FeedSample(BaseModel):
+    model_config = ConfigDict(allow_inf_nan=False)
     sample_id: Optional[str] = None
 
-    feed_type : str = Field(
+    feed_type : Literal["maize_silage", "dry_feed"] = Field(
         ...,
         description = "Type of feed or silage",
     )
@@ -18,6 +19,8 @@ class FeedSample(BaseModel):
 
     temperature : float = Field(
         ...,
+        ge=-20,
+        le=80,
         description = "Temperature in degree Celsius",
     )
 
@@ -40,3 +43,5 @@ class FeedSample(BaseModel):
         ge = 0,
         description = "Simulated ammonia / gas reading"
     )
+
+    source: Literal["manual", "virtual", "dataset", "device"] = "manual"

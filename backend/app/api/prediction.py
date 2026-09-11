@@ -14,7 +14,10 @@ router = APIRouter(
 
 @router.get("/model-info")
 def model_info():
-
+    try:
+        config = predictor.config
+    except (FileNotFoundError, ValueError, ImportError):
+        raise HTTPException(status_code=503, detail="FQI model unavailable; rule screening remains available")
     return {
         "model_name": predictor.config["model_name"],
         "model_version": predictor.config["model_version"],
@@ -24,7 +27,9 @@ def model_info():
             "target_description"
         ],
         "features": predictor.config["features"],
-        "evaluation": predictor.config["evaluation"]
+        "evaluation": predictor.config["evaluation"],
+        "evaluation_note": "Historical random-split model-selection results, not independent safety validation. See ai/evaluation/validated_metrics.json for the separate trial-grouped experiment.",
+        "limitations": predictor.config.get("limitations", []),
     }
 
 @router.post(
@@ -62,6 +67,8 @@ def predict_fqi(
         )
         )
 
+    except (FileNotFoundError, ImportError):
+        raise HTTPException(status_code=503, detail="FQI model unavailable; rule screening remains available")
     except Exception as exc:
 
         raise HTTPException(

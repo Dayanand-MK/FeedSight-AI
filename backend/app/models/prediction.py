@@ -12,8 +12,8 @@ class PredictionResult(BaseModel):
     
     spoilage_risk : str
 
-    confidence : float = Field(
-        ...,
+    confidence : float | None = Field(
+        default=None,
         ge = 0,
         le = 1,
     )
@@ -21,3 +21,6 @@ class PredictionResult(BaseModel):
     alerts : List[str] = []
 
     recommendation : str
+
+    assessment_type: str = "rule-based-screening"
+    note: str = "Prototype screening only. No calibrated confidence or toxin clearance."

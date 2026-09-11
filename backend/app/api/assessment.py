@@ -10,15 +10,11 @@ router = APIRouter(
     tags = ["Feed Assessment"],
 )
 
-@router.post(
-    "/assess",
-    response_model = FeedAssessmentResponse,
-)
-
 @router.get("/assessments")
 def list_assessments():
-    return get_all_assessments
+    return get_all_assessments()
 
+@router.post("/assess", response_model=FeedAssessmentResponse)
 def assess_feed_sample(sample : FeedSample):
     sample_id = sample.sample_id or str(uuid4())
     sample.sample_id = sample_id

@@ -93,4 +93,15 @@ class FQIPredictor:
         )
 
 
-predictor = FQIPredictor()
+from functools import lru_cache
+
+@lru_cache(maxsize=1)
+def get_predictor():
+    return FQIPredictor()
+
+class LazyFQIPredictor:
+    """Optional model files must not prevent the rest of the API from starting."""
+    def __getattr__(self, name):
+        return getattr(get_predictor(), name)
+
+predictor = LazyFQIPredictor()

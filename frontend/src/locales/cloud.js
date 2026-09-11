@@ -1,0 +1,15 @@
+export const cloudStrings = {
+  cloudConfigured: ["Cloud configured. Sign in to sync your saved reports.", "கிளவுட் அமைக்கப்பட்டுள்ளது. சேமித்த அறிக்கைகளை ஒத்திசைக்க உள்நுழையவும்.", "क्लाउड सेट है। सहेजी गई रिपोर्ट सिंक करने के लिए साइन इन करें।"],
+  cloudSignedIn: ["Signed in. Enable automatic sync or sync now.", "உள்நுழைந்துள்ளீர்கள். தானியங்கு ஒத்திசைவை இயக்கவும் அல்லது இப்போது ஒத்திசைக்கவும்.", "साइन इन हो गया। स्वचालित सिंक चालू करें या अभी सिंक करें।"],
+  existingAccountHelp: ["Use an existing FeedSight account. Confirm your account email before signing in.", "ஏற்கனவே உள்ள FeedSight கணக்கைப் பயன்படுத்தவும். உள்நுழையும் முன் மின்னஞ்சலை உறுதிப்படுத்தவும்.", "मौजूदा FeedSight खाते का उपयोग करें। साइन इन करने से पहले ईमेल की पुष्टि करें।"],
+  invalidCredentials: ["Email or password is incorrect. Try again.", "மின்னஞ்சல் அல்லது கடவுச்சொல் தவறு. மீண்டும் முயற்சிக்கவும்.", "ईमेल या पासवर्ड गलत है। फिर कोशिश करें।"],
+  emailNotConfirmed: ["Confirm your email using the account confirmation link, then sign in.", "கணக்கு உறுதிப்படுத்தும் இணைப்பில் மின்னஞ்சலை உறுதிப்படுத்தி உள்நுழையவும்.", "खाते के पुष्टि लिंक से ईमेल की पुष्टि करें, फिर साइन इन करें।"],
+  signInRequired: ["Sign in again to connect to your cloud records.", "கிளவுட் பதிவுகளை அணுக மீண்டும் உள்நுழையவும்.", "क्लाउड रिकॉर्ड से जुड़ने के लिए फिर साइन इन करें।"],
+  cloudTableMissing: ["Cloud storage setup is incomplete. Ask the project administrator to run the FeedSight database migration. Local reports are saved.", "கிளவுட் அமைப்பு முழுமையடையவில்லை. நிர்வாகியிடம் தரவுத்தள அமைப்பை முடிக்கக் கேளுங்கள். உள்ளூர் அறிக்கைகள் சேமிக்கப்பட்டுள்ளன.", "क्लाउड सेटअप अधूरा है। परियोजना व्यवस्थापक से डेटाबेस सेटअप पूरा करने को कहें। स्थानीय रिपोर्ट सहेजी हुई हैं।"],
+  cloudPermissionDenied: ["Your account cannot access cloud reports. Ask the project administrator to check database permissions. Local reports are saved.", "கிளவுட் அறிக்கைகளை அணுக அனுமதி இல்லை. நிர்வாகியிடம் அனுமதிகளைச் சரிபார்க்கக் கேளுங்கள். உள்ளூர் அறிக்கைகள் சேமிக்கப்பட்டுள்ளன.", "आपके खाते को क्लाउड रिपोर्ट की अनुमति नहीं है। व्यवस्थापक से अनुमतियाँ जाँचने को कहें। स्थानीय रिपोर्ट सहेजी हुई हैं।"],
+  cloudRateLimited: ["Too many requests. Wait a few minutes and try again.", "அதிக கோரிக்கைகள். சில நிமிடங்கள் கழித்து மீண்டும் முயற்சிக்கவும்.", "बहुत अधिक अनुरोध हैं। कुछ मिनट बाद फिर कोशिश करें।"],
+  cloudUnreachable: ["Cannot reach cloud storage. Check your connection and retry. Local reports are saved.", "கிளவுட்டை அணுக முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும். உள்ளூர் அறிக்கைகள் சேமிக்கப்பட்டுள்ளன.", "क्लाउड से संपर्क नहीं हो रहा। कनेक्शन जाँचकर फिर कोशिश करें। स्थानीय रिपोर्ट सहेजी हुई हैं।"],
+  checkCloud: ["Check cloud connection", "கிளவுட் இணைப்பைச் சரிபார்க்கவும்", "क्लाउड कनेक्शन जाँचें"],
+  cloudConnected: ["Connected. Your account can read its cloud reports. Sync now to upload pending reports.", "இணைக்கப்பட்டுள்ளது. கிளவுட் அறிக்கைகளைப் படிக்க முடிகிறது. நிலுவை அறிக்கைகளை ஒத்திசைக்கவும்.", "कनेक्ट हो गया। आपका खाता अपनी क्लाउड रिपोर्ट पढ़ सकता है। लंबित रिपोर्ट अपलोड करने के लिए सिंक करें।"],
+  syncing: ["Syncing…", "ஒத்திசைக்கிறது…", "सिंक हो रहा है…"],
+};

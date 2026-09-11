@@ -6,6 +6,7 @@ from backend.app.api.sync import router as sync_router
 from backend.app.api.simulation import router as simulation_router
 from backend.app.api.prediction import router as prediction_router
 from fastapi.middleware.cors import CORSMiddleware
+from backend.app.api.iot import router as iot_router
 
 @asynccontextmanager
 async def lifespan(app : FastAPI):
@@ -36,6 +37,7 @@ app.include_router(assessment_router)
 app.include_router(sync_router)
 app.include_router(simulation_router)
 app.include_router(prediction_router)
+app.include_router(iot_router)
 
 @app.get("/")
 def root():
