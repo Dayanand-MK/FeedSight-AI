@@ -17,10 +17,14 @@ export default function SpeechReport({ report, t, lang }) {
     const update = () => setVoices(synth.getVoices());
     update();
     synth.addEventListener("voiceschanged", update);
+    if ("onvoiceschanged" in synth) synth.onvoiceschanged = update;
     return () => {
       generation.current++;
       activeUtterance.current = null;
       synth.removeEventListener("voiceschanged", update);
+      if ("onvoiceschanged" in synth && synth.onvoiceschanged === update) {
+        synth.onvoiceschanged = null;
+      }
       synth.cancel();
     };
   }, [synth]);
@@ -43,6 +47,9 @@ export default function SpeechReport({ report, t, lang }) {
     }
     const id = ++generation.current;
     synth.cancel();
+    try {
+      synth.resume();
+    } catch {}
     setError("");
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = voice;
