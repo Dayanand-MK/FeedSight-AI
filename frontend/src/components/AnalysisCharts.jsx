@@ -364,32 +364,25 @@ export function FqiGauge({ score, status = "unknown", t }) {
 
 export function NutrientRadarChart({ nutrition, t }) {
   const metrics = [
-    { key: "protein", label: "Protein (CP)", max: 25 },
-    { key: "energy", label: "Energy (TDN)", max: 80 },
-    { key: "fiber", label: "Fiber (NDF)", max: 60 },
-    { key: "minerals", label: "Minerals", max: 12 },
-    {
-      key: "moisture",
-      label: "Dry Matter",
-      max: 100,
-      transform: (v) => (v != null ? 100 - v : null),
-    },
+    { key: "protein", unit: "% DM" },
+    { key: "energy", unit: "MJ/kg DM" },
+    { key: "fiber", unit: "% DM (NDF)" },
+    { key: "minerals", unit: null },
+    { key: "moisture", unit: null },
   ];
   const center = 120,
     r = 70;
   const points = metrics.map((m, i) => {
     const angle = (Math.PI * 2 * i) / metrics.length - Math.PI / 2;
-    const rawVal = nutrition?.values?.[m.key]?.value;
-    const val = m.transform ? m.transform(rawVal) : rawVal;
-    const norm =
-      typeof val === "number" && Number.isFinite(val)
-        ? Math.min(1, Math.max(0.12, val / m.max))
-        : 0.25;
+    const row = nutrition?.values?.[m.key];
+    const val = row?.value;
+    const known = m.unit && row?.unit === m.unit && (row.targetUnit || row.unit) === m.unit && row.reference && typeof val === 'number' && Number.isFinite(val) && val >= 0 && typeof row.target === 'number' && Number.isFinite(row.target) && row.target > 0;
+    const norm = known ? Math.min(1, val / row.target) : 0;
     const x = center + r * norm * Math.cos(angle);
     const y = center + r * norm * Math.sin(angle);
     const labelX = center + (r + 26) * Math.cos(angle);
     const labelY = center + (r + 22) * Math.sin(angle);
-    return { ...m, x, y, labelX, labelY, val, angle };
+    return { ...m, x, y, labelX, labelY, val, angle, known };
   });
 
   const polygonStr = points
@@ -403,7 +396,7 @@ export function NutrientRadarChart({ nutrition, t }) {
     >
       <h3>🧬 {t("nutritionQuality") || "Nutrient Balance Profile"}</h3>
       <p className="chart-note">
-        Multi-nutrient distribution compared with dairy dietary targets.
+        {t('balanceRadarScope')}
       </p>
       <div className="radar-svg-wrap">
         <svg viewBox="0 0 240 240" className="radar-svg" role="img">
@@ -428,23 +421,23 @@ export function NutrientRadarChart({ nutrition, t }) {
               stroke="#d4ded0"
             />
           ))}
-          <polygon
+          {points.every(p=>p.known) && <polygon
             points={polygonStr}
             fill="rgba(46, 125, 50, 0.22)"
             stroke="#2e7d32"
             strokeWidth="2.5"
             className="radar-polygon"
-          />
+          />}
           {points.map((p, i) => (
             <g key={i}>
-              <circle
+              {p.known && <circle
                 cx={p.x}
                 cy={p.y}
                 r="4"
                 fill="#2e7d32"
                 stroke="#fff"
                 strokeWidth="1.5"
-              />
+              />}
               <text
                 x={p.labelX}
                 y={p.labelY}
@@ -453,7 +446,7 @@ export function NutrientRadarChart({ nutrition, t }) {
                 className="radar-label"
                 fontSize="9"
               >
-                {t(p.key) || p.label}
+                {t(p.key)}{p.known ? '' : ' —'}
               </text>
             </g>
           ))}

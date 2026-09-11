@@ -1,4 +1,5 @@
 export const balanceStrings = {
+  balanceRadarScope: ['Markers show entered values relative to documented ingredient minima. The outer ring is the supplied minimum; values above it are capped visually. Missing/incompatible comparisons have no marker. This is not a complete-ration target profile.', 'குறிகள் வழங்கிய தீவன குறைந்தபட்சத்துடன் ஒப்பிடப்பட்ட மதிப்புகள். வெளி வட்டம் குறைந்தபட்சம்; அதிக மதிப்புகள் வரைபடத்தில் வரையறுக்கப்படும். இல்லாத ஒப்பீடுகளுக்கு குறி இல்லை. இது முழு உணவுத் தேவை அல்ல.', 'बिंदु दर्ज मानों को दिए घटक-न्यूनतम से तुलना करते हैं। बाहरी वृत्त न्यूनतम है; अधिक मान दृश्य में सीमित हैं। अनुपलब्ध/असंगत तुलना का बिंदु नहीं। यह पूरे राशन की आवश्यकता नहीं है।'],
   balanceTitle: ["Nutrient balance", "ஊட்டச்சத்து சமநிலை", "पोषक संतुलन"],
   balanceScope: [
     "Comparison with your documented ingredient benchmark. This does not establish whole-ration adequacy or an animal deficiency.",

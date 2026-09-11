@@ -54,6 +54,10 @@ feeding advice is copied into the app.
 
 ## Interaction and persistence
 
+The existing radar chart now uses only explicitly referenced compatible minima.
+It has no invented dairy dietary targets, TDN conversion or nonzero missing-value
+markers. Its outer ring is a supplied minimum, not a validated ideal ration.
+
 Tap a nutrient status, inspect its units/source/reference, then choose a supported
 option. The explanation displays its role, current goal, limitations and source.
 The current/potential table deliberately says 'may support' or 'not evaluated',

@@ -24,12 +24,14 @@ test('offline nutrient balance options, goal switch and saved snapshot', async (
   await page.getByRole('button',{name:'Check feed'}).click();
   const balance=page.getByRole('region',{name:'Nutrient balance',exact:true});
   await expect(balance).toBeVisible();
+  // Four grid rings plus two real comparable values; missing axes get no dot.
+  await expect(page.locator('.radar-chart circle')).toHaveCount(6);
   await balance.getByRole('button',{name:'Protein-rich feed category',exact:true}).click();
   await expect(balance.getByRole('table')).toContainText('May support this nutrient');
   await expect(balance).toContainText('not a predicted after-feeding composition');
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'test-results/nutrient-balance-mobile.png',fullPage:true});
+  await balance.screenshot({path:'test-results/nutrient-balance-mobile.png'});
   await page.locator('.goal-summary').getByText('Change goal',{exact:true}).click();
   await page.locator('.goal-summary').getByRole('button',{name:'Animal Health',exact:true}).click();
   await expect(balance.getByRole('button').first()).toContainText('Fiber');
